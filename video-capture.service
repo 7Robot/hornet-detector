@@ -1,0 +1,14 @@
+[Unit]
+Description=Video capture with Basler camera
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/python3 ~/video_capture/ton_script.py
+WorkingDirectory=~/video_capture
+Restart=on-failure
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=default.target
