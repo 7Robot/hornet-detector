@@ -5,13 +5,15 @@ import os
 import signal
 import sys
 from datetime import datetime
+from time import sleep
 import shutil
 
 running = True
 
 def signal_handler(sig, frame):
     global running
-    print("\nArrêt demandé, fermeture propre…")
+    with open(os.path.join(os.path.expanduser("~/videos"), "log.txt"), "a") as f:
+        f.write(f"{datetime.now()} - Arrêt demandé, fermeture propre…\n")
     running = False
 
 signal.signal(signal.SIGINT, signal_handler)
@@ -40,6 +42,8 @@ converter.OutputBitAlignment = pylon.OutputBitAlignment_MsbAligned
 width = 2592
 height = 1944
 fps = 10
+start_time = datetime.strptime("2025-07-10 15:00:00", "%Y-%m-%d %H:%M:%S")
+end_time   = datetime.strptime("2025-07-10 15:05:00", "%Y-%m-%d %H:%M:%S")
 
 timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 output_dir = os.path.expanduser("~/videos")
@@ -54,6 +58,13 @@ if not disk_space_ok(output_dir):
         f.write(f"{datetime.now()} - Pas assez d'espace disque, arrêt immédiat.\n")
     sys.exit(1)
 
+
+print(f"En attente du début d'acquisition : {start_time}")
+while datetime.now() < start_time and running:
+    sleep(1)
+
+if not running:
+    sys.exit(0)
 
 camera.Open()
 camera.ExposureAuto.SetValue('Off')
@@ -73,6 +84,12 @@ camera.StartGrabbing()
 
 try:
     while camera.IsGrabbing() and running:
+        current_time = datetime.now()
+        if current_time >= end_time:
+            with open(os.path.join(output_dir, "log.txt"), "a") as f:
+                f.write(f"{datetime.now()} - Fin d'acquisition atteinte : {end_time}\n")
+            break
+
         grab_result = camera.RetrieveResult(2000, pylon.TimeoutHandling_ThrowException)
         if grab_result.GrabSucceeded():
             image = converter.Convert(grab_result)
