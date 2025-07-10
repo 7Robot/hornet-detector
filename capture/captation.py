@@ -61,12 +61,9 @@ width = 2592
 height = 1944
 fps = 10
 
-timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 output_dir = os.path.expanduser("~/videos")
 os.makedirs(output_dir, exist_ok=True)
-output_filename = os.path.join(output_dir, f"capture_{timestamp}.avi")
 fourcc = cv2.VideoWriter_fourcc(*'MJPG')
-out = cv2.VideoWriter(output_filename, fourcc, fps, (width, height))
 
 
 if not disk_space_ok(output_dir, min_free_mb=min_free_mb):

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Configuration caméra</title>
+</head>
+<body>
+    <h1>Paramètres de capture</h1>
+    <form method="POST" action="/update">
+        <h2>Settings</h2>
+        {% for key, value in config.settings.items() %}
+            <label>{{ key }}:</label>
+            <input type="text" name="{{ key }}" value="{{ value }}"><br>
+        {% endfor %}
+
+        <h2>Périodes d'enregistrement</h2>
+        <div id="periods">
+            {% for p in config.periods %}
+                <div class="period">
+                    <label>Début:</label>
+                    <input type="text" name="start" value="{{ p.start }}">
+                    <label>Fin:</label>
+                    <input type="text" name="end" value="{{ p.end }}">
+                    <button type="button" onclick="this.parentElement.remove()">Supprimer</button>
+                    <br>
+                </div>
+            {% endfor %}
+        </div>
+        <button type="button" onclick="addPeriod()">Ajouter une période</button><br><br>
+        <button type="submit">Enregistrer</button>
+    </form>
+
+    <h2>Service: {{ status }}</h2>
+    <a href="/service/start">Démarrer</a> |
+    <a href="/service/stop">Arrêter</a> |
+    <a href="/service/restart">Redémarrer</a>
+
+    <script>
+        function addPeriod() {
+            const div = document.createElement('div');
+            div.classList.add("period");
+            div.innerHTML = `
+                <label>Début:</label>
+                <input type="text" name="start" value="">
+                <label>Fin:</label>
+                <input type="text" name="end" value="">
+                <button type="button" onclick="this.parentElement.remove()">Supprimer</button>
+                <br>`;
+            document.getElementById('periods').appendChild(div);
+        }
+    </script>
+</body>
+</html>
