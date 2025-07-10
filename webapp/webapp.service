@@ -1,0 +1,15 @@
+[Unit]
+Description=webapp for video capture with Basler camera
+After=network.target
+
+[Service]
+Environment=HOME=/home/bob
+ExecStart=/usr/bin/python3 /home/bob/video_capture/webapp/app.py
+WorkingDirectory=/home/bob/video_capture/webapp
+Restart=on-failure
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=default.target
