@@ -1,11 +1,12 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask import Flask, render_template, request, redirect, url_for, jsonify, flash
 import json
 import subprocess
 import os
 
 app = Flask(__name__)
+app.secret_key = 'secret'
 CONFIG_PATH = os.path.join(os.path.dirname(__file__), '../config.json')
-SERVICE_NAME = "video-capture.service"r
+SERVICE_NAME = "video-capture.service"
 
 def read_config():
     with open(CONFIG_PATH, 'r') as f:
@@ -50,6 +51,7 @@ def update():
     }
 
     write_config(new_config)
+    flash("Configuration enregistrée. Redémarrer le service pour appliquer les modifications.")
     return redirect(url_for('index'))
 
 @app.route('/service/<action>')
@@ -63,4 +65,4 @@ def status():
     return jsonify(status=service_status())
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=80)
+    app.run(host='0.0.0.0', port=5000)
