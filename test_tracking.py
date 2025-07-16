@@ -1,7 +1,6 @@
 import cv2
 import numpy as np
 from pynput.mouse import Controller
-import time
 
 # Configuration
 TRACK_ID = 1
@@ -19,18 +18,20 @@ width, height = 1280, 720
 
 mouse_pos = [width // 2, height // 2]  # position initiale
 
+
 def mouse_callback(event, x, y, flags, param):
     if event == cv2.EVENT_MOUSEMOVE:
         mouse_pos[0] = x
         mouse_pos[1] = y
 
+
 cv2.namedWindow("Simulation frelon asiatique")
 cv2.setMouseCallback("Simulation frelon asiatique", mouse_callback)
 
 
-
 mouse = Controller()
 track_history = []
+
 
 def compute_frelon_score(memory):
     # Longueur cumulée des vols stationnaires
@@ -52,6 +53,7 @@ def compute_frelon_score(memory):
 
     return min(score, 1.0)
 
+
 def is_stationary(history, threshold=10):
     if len(history) < 2:
         return False
@@ -60,9 +62,11 @@ def is_stationary(history, threshold=10):
     dy = positions[:, 1].max() - positions[:, 1].min()
     return dx < threshold and dy < threshold
 
+
 def is_in_ignore_zone(cx, cy, zone):
     zx, zy, zw, zh = zone
     return zx <= cx <= zx + zw and zy <= cy <= zy + zh
+
 
 def analyze_movement(track):
     cx, cy = track["center"]
@@ -82,19 +86,28 @@ def analyze_movement(track):
     else:
         print(f"Track {track['track_id']} en mouvement")
 
+
 def draw_overlay(frame, bbox, color=(0, 255, 0), label="Track 1"):
     x, y, w, h = bbox
     cv2.rectangle(frame, (x, y), (x + w, y + h), color, 2)
-    cv2.putText(frame, label, (x, y - 10),
-                cv2.FONT_HERSHEY_SIMPLEX, 0.6, color, 2)
+    cv2.putText(frame, label, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.6, color, 2)
+
 
 def draw_ignore_zone(frame, zone):
     x, y, w, h = zone
     cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 0, 255), 2)
-    cv2.putText(frame, "Zone non surveillee", (x, y - 10),
-                cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1)
+    cv2.putText(
+        frame,
+        "Zone non surveillee",
+        (x, y - 10),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.5,
+        (0, 0, 255),
+        1,
+    )
 
-# Fenêtre d’affichage
+
+# Fenêtre d'affichage
 canvas = np.zeros((height, width, 3), dtype=np.uint8)
 
 print("🖱️ Déplace la souris pour simuler un frelon asiatique.")
@@ -107,7 +120,7 @@ while True:
     draw_ignore_zone(frame, ZONE_IGNORE)
 
     # Obtenir position souris
-    #mx, my = mouse.position
+    # mx, my = mouse.position
     mx, my = mouse_pos  # Utiliser la position de la souris capturée
 
     cx, cy = int(mx), int(my)
@@ -130,7 +143,7 @@ while True:
         "bbox": bbox,
         "center": (cx, cy),
         "bbox_area": area,
-        "age": age
+        "age": age,
     }
 
     draw_overlay(frame, bbox)
@@ -144,4 +157,3 @@ while True:
         break
 
 cv2.destroyAllWindows()
-

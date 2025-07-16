@@ -1,0 +1,10 @@
+# PyCharm stuff
+.idea/
+# Local virtual environment
+.venv/
+
+# Local env file
+.env
+
+# Downloadable YOLO models
+yolov8*.pt
