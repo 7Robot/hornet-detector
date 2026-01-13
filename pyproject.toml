@@ -1,0 +1,62 @@
+[project]
+name = "hornet-detector"
+version = "0.1.0"
+description = "A computer vision project for detecting hornets in images and video using deep learning in order to protect a bee hive"
+readme = "README.md"
+requires-python = "~=3.13.0"
+dependencies = [
+    "flask~=3.1.1",
+    "opencv-python~=4.12.0",
+    "pynput~=1.8.1",
+    "ruff~=0.12.3",
+    "torch~=2.7.1",
+    "tqdm~=4.67.1",
+    "ultralytics~=8.3.167",
+]
+
+[tool.ruff]
+fix = true
+
+[tool.ruff.lint]
+select = [
+    # See https://docs.astral.sh/ruff/rules/
+    "F", # Pyflakes
+    "E", # pycodestyle
+    "W", # pycodestyle
+    "C90", # mccabe
+    "I", # isort
+    "N", # pep8-naming
+    "UP", # pyupgrade
+    "ASYNC", # flake8-async
+    "S", # flake8-bandit
+    "BLE", # flake8-blind-except
+    "FBT", # flake8-boolean-trap
+    "B",  # flake8-bugbear
+    "A", # flake8-builtins
+    "COM", # flake8-commas
+    "C4", # flake8-comprehensions
+    "T10", # flake8-debugger
+    "ISC", # flake8-implicit-str-concat
+    "LOG", # flake8-logging
+    "G", # flake8-logging-format
+    "PIE", # flake8-logging-format
+    "RSE", # flake8-raise
+    "RET", # flake8-return
+    "SIM", # flake8-simplify
+    "NPY", # NumPy-specific rules
+    "PERF", # Perflint
+    "RUF", # Ruff-specific rules
+]
+ignore = [
+    "COM812", # avoid conflicts with formatter (prohibited-trailing-comma)
+    "ISC001", # avoid conflicts with formatter (single-line-implicit-string-concatenation)
+]
+
+[tool.ruff.lint.isort]
+split-on-trailing-comma = false
+
+[tool.ruff.format]
+skip-magic-trailing-comma = true
+
+[tool.pytest.ini_options]
+testpaths = "tests"
